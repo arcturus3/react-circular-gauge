@@ -172,29 +172,32 @@ export const Gauge = ({
         width: '100%',
         position: 'relative'
       }}>
-        <springAnimated.div style={{
+        <springAnimated.span style={{
+          lineHeight: 'normal',
           fontSize: 64
         }}>
           {renderString(renderValue)}
-        </springAnimated.div>
-        <springAnimated.div style={{
+        </springAnimated.span>
+        <springAnimated.span style={{
           position: 'absolute',
           top: 0,
           left: '50%',
           transform: 'translate(-50%, -100%)',
+          lineHeight: 'normal',
           fontSize: 24
         }}>
           {renderString(renderTopLabel)}
-        </springAnimated.div>
-        <springAnimated.div style={{
+        </springAnimated.span>
+        <springAnimated.span style={{
           position: 'absolute',
           bottom: 0,
           left: '50%',
           transform: 'translate(-50%, 100%)',
+          lineHeight: 'normal',
           fontSize: 24
         }}>
           {renderString(renderBottomLabel)}
-        </springAnimated.div>
+        </springAnimated.span>
       </div>
     </div>
   )
