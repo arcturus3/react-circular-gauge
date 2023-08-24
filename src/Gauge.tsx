@@ -1,17 +1,25 @@
 import { arc } from '@visx/shape'
-import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, AnimatedComponent } from '@react-spring/web'
+import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, Interpolation } from '@react-spring/web'
 import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
 import {useMeasure} from 'react-use'
 
-// refs
-// styles, colors, validate color strings?
-// switch to rendering divs
-// fix type errors
+type RenderableStringArgs = {
+  value: number
+  roundedValue: string
+  normalizedValue: number
+  rawValue: number
+}
 
-type Renderable
-  = ReactNode
-  | ((value: number, normalizedValue: number, rawValue: number) => string)
-  | ((value: SpringValue<number>, normalizedValue: SpringValue<number>, rawValue: SpringValue<number>) => AnimatedComponent<T>)
+type RenderableString = string | ((args: RenderableStringArgs) => string)
+
+type RenderableNodeArgs = {
+  value: SpringValue<number>
+  roundedValue: Interpolation<number, string>
+  normalizedValue: Interpolation<number, number>
+  rawValue: number
+}
+
+type RenderableNode = ReactNode | ((args: RenderableNodeArgs) => ReactNode)
 
 type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
@@ -20,17 +28,17 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
   startAngle?: number
   endAngle?: number
   direction?: 'cw' | 'ccw'
-  renderValue?: Renderable
-  renderTopLabel?: Renderable
-  renderBottomLabel?: Renderable
-  renderContent?: Renderable
+  renderValue?: RenderableString
+  renderTopLabel?: RenderableString
+  renderBottomLabel?: RenderableString
+  renderContent?: RenderableNode
   roundDigits?: number
   radius?: number
   arcWidth?: number
   trackWidth?: number
   arcCornerRadius?: number
   trackCornerRadius?: number
-  arcColor?: string | ((value: number) => string)
+  arcColor?: RenderableString
   trackColor?: string
   containerStyle?: CSSProperties
   labelStyle?: CSSProperties
@@ -39,12 +47,13 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
 }
 
 const clamp = (min: number, max: number, x: number) => Math.min(max, Math.max(min, x))
+const round = (digits: number, x: number) => x.toFixed(digits)
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const inverseLerp = (a: number, b: number, x: number) => (x - a) / (b - a)
 const warn = (condition: boolean, message: string) => !condition && console.warn(message)
 
 export const Gauge = ({
-  value = 0,
+  value: rawValue = 0,
   minValue = 0,
   maxValue = 100,
   startAngle: startAngleDeg = 0,
@@ -128,14 +137,28 @@ export const Gauge = ({
   })(undefined) ?? undefined
 
   const spring = useSpring({
-    value: clamp(minValue, maxValue, value),
+    value: clamp(minValue, maxValue, rawValue),
     immediate: !animated,
     config: springConfig
   })
 
-  const render = (thing: Renderable) => typeof thing === 'function'
-    ? spring.value.to(value => thing(value.toFixed(roundDigits)))
-    : thing
+  const renderString = (renderable: RenderableString | undefined) => typeof renderable === 'function'
+    ? spring.value.to(value => renderable({
+      value: value,
+      roundedValue: round(roundDigits, value),
+      normalizedValue: inverseLerp(minValue, maxValue, value),
+      rawValue: rawValue
+    }))
+    : renderable
+
+  const renderNode = (renderable: RenderableNode) => typeof renderable === 'function'
+    ? renderable({
+      value: spring.value,
+      roundedValue: spring.value.to(value => round(roundDigits, value)),
+      normalizedValue: spring.value.to(value => inverseLerp(minValue, maxValue, value)),
+      rawValue: rawValue
+    })
+    : renderable
 
   const defaultContent = (
     <div style={{
@@ -149,32 +172,29 @@ export const Gauge = ({
         width: '100%',
         position: 'relative'
       }}>
-        <springAnimated.span style={{
-          lineHeight: 'normal',
+        <springAnimated.div style={{
           fontSize: 64
         }}>
-          {render(renderValue)}
-        </springAnimated.span>
-        <span style={{
+          {renderString(renderValue)}
+        </springAnimated.div>
+        <springAnimated.div style={{
           position: 'absolute',
           top: 0,
           left: '50%',
           transform: 'translate(-50%, -100%)',
-          lineHeight: 'normal',
           fontSize: 24
         }}>
-          {render(renderTopLabel)}
-        </span>
-        <span style={{
+          {renderString(renderTopLabel)}
+        </springAnimated.div>
+        <springAnimated.div style={{
           position: 'absolute',
           bottom: 0,
           left: '50%',
           transform: 'translate(-50%, 100%)',
-          lineHeight: 'normal',
           fontSize: 24
         }}>
-          {render(renderBottomLabel)}
-        </span>
+          {renderString(renderBottomLabel)}
+        </springAnimated.div>
       </div>
     </div>
   )
@@ -192,12 +212,15 @@ export const Gauge = ({
         d={trackPath}
       />
       <springAnimated.path
-        fill={typeof arcColor === 'function' ? spring.value.to(arcColor) : arcColor}
+        fill={renderString(arcColor)}
         d={spring.value.to(arcPath)}
       />
       <foreignObject x={-contentRadius} y={-contentRadius} width={contentRadius * 2} height={contentRadius * 2}>
         <div style={{width: contentRadius * 2, height: contentRadius * 2}}>
-          {renderContent === undefined ? defaultContent : render(renderContent)}
+          {renderValue !== undefined || renderTopLabel !== undefined || renderBottomLabel !== undefined
+            ? defaultContent
+            : renderNode(renderContent)
+          }
         </div>
       </foreignObject>
     </svg>
