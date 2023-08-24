@@ -24,11 +24,6 @@ function App() {
   // if (props.value < clampedValue) valuePrefix = '<'
   // if (props.value > clampedValue) valuePrefix = '>'
 
-  const temperatureColor = (temperature: number) => {
-    const t = (temperature - minTemperature) / (maxTemperature - minTemperature)
-    return interpolatePlasma(t)
-  }
-
   const randomizeTemperature = () => {
     setTemperature(chance.integer({min: minTemperature, max: maxTemperature}))
   }
@@ -51,7 +46,7 @@ function App() {
         maxValue={maxTemperature}
         direction='cw'
         renderBottomLabel='°C'
-        arcColor={temperatureColor}
+        arcColor={({normalizedValue}) => interpolatePlasma(normalizedValue)}
         arcWidth={0.1}
         animated={true}
         // arcCornerRadius={0}
