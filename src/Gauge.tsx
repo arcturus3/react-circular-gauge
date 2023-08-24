@@ -1,8 +1,13 @@
 import { arc } from '@visx/shape'
-import { Text } from '@visx/text'
 import { useSpring, animated as springAnimated, AnimationConfig } from '@react-spring/web'
 import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
 import {useMeasure} from 'react-use'
+
+// clamping
+// refs
+// fix type errors
+// render content (passing spring value?)
+// styles
 
 type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
@@ -29,11 +34,10 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
   springConfig?: Partial<AnimationConfig>
 }
 
-const AnimatedText = springAnimated(Text)
-
 const clamp = (min: number, max: number, x: number) => Math.min(max, Math.max(min, x))
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const inverseLerp = (a: number, b: number, x: number) => (x - a) / (b - a)
+const warn = (condition: boolean, message: string) => !condition && console.warn(message)
 
 export const Gauge = ({
   value = 0,
@@ -60,15 +64,15 @@ export const Gauge = ({
   ...rest
 }: GaugeProps) => {
 
-  console.assert(minValue < maxValue)
-  console.assert(minValue <= value && value <= maxValue)
-  console.assert(0 <= startAngleDeg && startAngleDeg < 360)
-  console.assert(0 <= endAngleDeg && endAngleDeg < 360)
-  console.assert(roundDigits >= 0)
-  console.assert(0 <= arcWidthFactor && arcWidthFactor <= 2)
-  console.assert(0 <= trackWidthFactor && trackWidthFactor <= 2)
-  console.assert(0 <= arcCornerRadiusFactor && arcCornerRadiusFactor <= 0.5)
-  console.assert(0 <= trackCornerRadiusFactor && trackCornerRadiusFactor <= 0.5)
+  warn(minValue < maxValue, 'minValue should be less than maxValue')
+  warn(minValue <= value && value <= maxValue, 'value should be at least minValue and at most maxValue')
+  warn(0 <= startAngleDeg && startAngleDeg < 360, 'startAngle should be at least 0 and less than 360')
+  warn(0 <= endAngleDeg && endAngleDeg < 360, 'endAngle should be at least 0 and less than 360')
+  warn(roundDigits >= 0, 'roundDigits should be nonnegative')
+  warn(0 <= arcWidthFactor && arcWidthFactor <= 2, 'arcWidth should be at least 0 and at most 2')
+  warn(0 <= trackWidthFactor && trackWidthFactor <= 2, 'trackWidth should be at least 0 and at most 2')
+  warn(0 <= arcCornerRadiusFactor && arcCornerRadiusFactor <= 0.5, 'arcCornerRadius should be at least 0 and at most 0.5')
+  warn(0 <= trackCornerRadiusFactor && trackCornerRadiusFactor <= 0.5, 'trackCornerRadius should be at least 0 and at most 0.5')
 
   /*
   although radius can be arbitrary, it should match the displayed radius in CSS pixels to avoid scaling the content:
@@ -123,6 +127,7 @@ export const Gauge = ({
   // figure out good way to handle clamping
   const spring = useSpring({
     value: clamp(minValue, maxValue, value),
+    immediate: !animated,
     config: springConfig
   })
 
@@ -151,8 +156,6 @@ export const Gauge = ({
           <div style={{
             width: '100%',
             height: '100%',
-            // border: '1px solid red',
-            // boxSizing: 'border-box',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',

@@ -53,6 +53,7 @@ function App() {
         renderBottomLabel='°C'
         arcColor={temperatureColor}
         arcWidth={0.1}
+        animated={false}
         // arcCornerRadius={0}
       />
     </div>
