@@ -59,7 +59,7 @@ export const Gauge = ({
   startAngle: startAngleDeg = 0,
   endAngle: endAngleDeg = 0,
   direction = 'cw',
-  renderValue = value => `${value}`,
+  renderValue = ({value}) => `${value}`,
   renderTopLabel,
   renderBottomLabel,
   renderContent,
