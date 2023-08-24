@@ -1,13 +1,17 @@
 import { arc } from '@visx/shape'
-import { useSpring, animated as springAnimated, AnimationConfig } from '@react-spring/web'
+import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, AnimatedComponent } from '@react-spring/web'
 import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
 import {useMeasure} from 'react-use'
 
-// clamping
 // refs
+// styles, colors, validate color strings?
+// switch to rendering divs
 // fix type errors
-// render content (passing spring value?)
-// styles
+
+type Renderable
+  = ReactNode
+  | ((value: number, normalizedValue: number, rawValue: number) => string)
+  | ((value: SpringValue<number>, normalizedValue: SpringValue<number>, rawValue: SpringValue<number>) => AnimatedComponent<T>)
 
 type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
@@ -16,10 +20,10 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
   startAngle?: number
   endAngle?: number
   direction?: 'cw' | 'ccw'
-  renderValue?: string | ((value: number) => string)
-  renderTopLabel?: string | ((value: number) => string)
-  renderBottomLabel?: string | ((value: number) => string)
-  renderContent?: ReactNode | ((value: number) => ReactNode)
+  renderValue?: Renderable
+  renderTopLabel?: Renderable
+  renderBottomLabel?: Renderable
+  renderContent?: Renderable
   roundDigits?: number
   radius?: number
   arcWidth?: number
@@ -65,7 +69,6 @@ export const Gauge = ({
 }: GaugeProps) => {
 
   warn(minValue < maxValue, 'minValue should be less than maxValue')
-  warn(minValue <= value && value <= maxValue, 'value should be at least minValue and at most maxValue')
   warn(0 <= startAngleDeg && startAngleDeg < 360, 'startAngle should be at least 0 and less than 360')
   warn(0 <= endAngleDeg && endAngleDeg < 360, 'endAngle should be at least 0 and less than 360')
   warn(roundDigits >= 0, 'roundDigits should be nonnegative')
@@ -124,7 +127,6 @@ export const Gauge = ({
     endAngle: endAngle
   })(undefined) ?? undefined
 
-  // figure out good way to handle clamping
   const spring = useSpring({
     value: clamp(minValue, maxValue, value),
     immediate: !animated,
@@ -134,6 +136,48 @@ export const Gauge = ({
   const render = (thing: Renderable) => typeof thing === 'function'
     ? spring.value.to(value => thing(value.toFixed(roundDigits)))
     : thing
+
+  const defaultContent = (
+    <div style={{
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+    }}>
+      <div style={{
+        width: '100%',
+        position: 'relative'
+      }}>
+        <springAnimated.span style={{
+          lineHeight: 'normal',
+          fontSize: 64
+        }}>
+          {render(renderValue)}
+        </springAnimated.span>
+        <span style={{
+          position: 'absolute',
+          top: 0,
+          left: '50%',
+          transform: 'translate(-50%, -100%)',
+          lineHeight: 'normal',
+          fontSize: 24
+        }}>
+          {render(renderTopLabel)}
+        </span>
+        <span style={{
+          position: 'absolute',
+          bottom: 0,
+          left: '50%',
+          transform: 'translate(-50%, 100%)',
+          lineHeight: 'normal',
+          fontSize: 24
+        }}>
+          {render(renderBottomLabel)}
+        </span>
+      </div>
+    </div>
+  )
 
   return (
     <svg
@@ -153,45 +197,7 @@ export const Gauge = ({
       />
       <foreignObject x={-contentRadius} y={-contentRadius} width={contentRadius * 2} height={contentRadius * 2}>
         <div style={{width: contentRadius * 2, height: contentRadius * 2}}>
-          <div style={{
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-          }}>
-            <div style={{
-              width: '100%',
-              position: 'relative'
-            }}>
-              <springAnimated.span style={{
-                lineHeight: 'normal',
-                fontSize: 64
-              }}>
-                {render(renderValue)}
-              </springAnimated.span>
-              <span style={{
-                position: 'absolute',
-                top: 0,
-                left: '50%',
-                transform: 'translate(-50%, -100%)',
-                lineHeight: 'normal',
-                fontSize: 24
-              }}>
-                {render(renderTopLabel)}
-              </span>
-              <span style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '50%',
-                transform: 'translate(-50%, 100%)',
-                lineHeight: 'normal',
-                fontSize: 24
-              }}>
-                {render(renderBottomLabel)}
-              </span>
-            </div>
-          </div>
+          {renderContent === undefined ? defaultContent : render(renderContent)}
         </div>
       </foreignObject>
     </svg>
