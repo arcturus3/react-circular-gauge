@@ -1,5 +1,5 @@
 import { arc } from '@visx/shape'
-import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, AnimatedComponent } from '@react-spring/web'
+import { useSpring, animated as springAnimated, AnimationConfig, SpringValue } from '@react-spring/web'
 import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
 import {useMeasure} from 'react-use'
 
@@ -8,10 +8,15 @@ import {useMeasure} from 'react-use'
 // switch to rendering divs
 // fix type errors
 
-type Renderable
-  = ReactNode
-  | ((value: number, normalizedValue: number, rawValue: number) => string)
-  | ((value: SpringValue<number>, normalizedValue: SpringValue<number>, rawValue: SpringValue<number>) => AnimatedComponent<T>)
+type RenderArgs = {
+  value: number
+  normalizedValue: number
+  springValue: SpringValue<number>
+  normalizedSpringValue: SpringValue<number>
+  rawValue: number
+}
+
+type Renderable = ReactNode | ((args: RenderArgs) => ReactNode)
 
 type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
@@ -132,6 +137,14 @@ export const Gauge = ({
     immediate: !animated,
     config: springConfig
   })
+
+  const args = {
+    value: number
+    normalizedValue: number
+    springValue: SpringValue<number>
+    normalizedSpringValue: SpringValue<number>
+    rawValue: number
+  }
 
   const render = (thing: Renderable) => typeof thing === 'function'
     ? spring.value.to(value => thing(value.toFixed(roundDigits)))
