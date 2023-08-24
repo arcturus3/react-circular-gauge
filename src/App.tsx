@@ -50,6 +50,7 @@ function App() {
         arcWidth={0.1}
         animated={true}
         // arcCornerRadius={0}
+        // roundDigits={1}
       />
     </div>
   )
