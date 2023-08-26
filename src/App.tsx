@@ -28,10 +28,6 @@ function App() {
     setTemperature(chance.integer({min: minTemperature, max: maxTemperature}))
   }
 
-  const ref = useRef(null)
-
-  useEffect(() => console.log(ref))
-
   return (
     <div
       onClick={randomizeTemperature}
@@ -39,8 +35,8 @@ function App() {
         position: 'fixed',
         left: 20,
         bottom: 20,
-        width: 200,
-        height: 200,
+        width: 300,
+        height: 300,
         cursor: 'pointer'
       }}
     >
@@ -55,7 +51,6 @@ function App() {
         animated={true}
         // arcCornerRadius={0}
         roundDigits={1}
-        ref={ref}
       />
     </div>
   )

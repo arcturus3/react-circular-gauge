@@ -51,8 +51,9 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
   trackCornerRadius?: number
   arcColor?: RenderableString
   trackColor?: string
-  containerStyle?: CSSProperties
-  labelStyle?: CSSProperties
+  valueStyle?: CSSProperties
+  topLabelStyle?: CSSProperties
+  bottomLabelStyle?: CSSProperties
   animated?: boolean,
   springConfig?: Partial<AnimationConfig>
 }
@@ -81,8 +82,9 @@ export const Gauge = forwardRef<SVGSVGElement>(({
   trackCornerRadius: trackCornerRadiusFactor = 0.5,
   arcColor = 'hsl(0 0% 100%)',
   trackColor = 'hsl(0 0% 20%)',
-  containerStyle = {},
-  labelStyle = {},
+  valueStyle,
+  topLabelStyle,
+  bottomLabelStyle,
   animated = true,
   springConfig,
   ...rest
@@ -99,16 +101,17 @@ export const Gauge = forwardRef<SVGSVGElement>(({
 
   /*
   although radius can be arbitrary, it should match the displayed radius in CSS pixels to avoid scaling the content:
-  width   = containerRadius * 2
+  min(width, height)
+          = containerRadius * 2
           = max(outerArcRadius, outerTrackRadius) * 2
           = max(radius + radius * arcWidthFactor / 2, radius + radius * trackWidthFactor / 2) * 2
           = radius * (2 + max(arcWidthFactor, trackWidthFactor))
-  radius  = width / (2 + max(arcWidthFactor, trackWidthFactor))
+  radius  = min(width, height) / (2 + max(arcWidthFactor, trackWidthFactor))
   */
 
-  const [measureRef, {width}] = useMeasure()
+  const [measureRef, {width, height}] = useMeasure()
  
-  const radius = width / (2 + Math.max(arcWidthFactor, trackWidthFactor))
+  const radius = Math.min(width, height) / (2 + Math.max(arcWidthFactor, trackWidthFactor))
   const innerArcRadius = radius - radius * arcWidthFactor / 2
   const outerArcRadius = radius + radius * arcWidthFactor / 2
   const arcCornerRadius = radius * arcWidthFactor * arcCornerRadiusFactor
@@ -184,8 +187,9 @@ export const Gauge = forwardRef<SVGSVGElement>(({
         position: 'relative'
       }}>
         <springAnimated.span style={{
-          lineHeight: 'normal',
-          fontSize: 64
+          lineHeight: 1.5,
+          fontSize: containerRadius / 2,
+          ...valueStyle
         }}>
           {renderString(renderValue)}
         </springAnimated.span>
@@ -195,7 +199,8 @@ export const Gauge = forwardRef<SVGSVGElement>(({
           left: '50%',
           transform: 'translate(-50%, -100%)',
           lineHeight: 'normal',
-          fontSize: 24
+          fontSize: containerRadius / 4,
+          ...topLabelStyle
         }}>
           {renderString(renderTopLabel)}
         </springAnimated.span>
@@ -205,7 +210,8 @@ export const Gauge = forwardRef<SVGSVGElement>(({
           left: '50%',
           transform: 'translate(-50%, 100%)',
           lineHeight: 'normal',
-          fontSize: 24
+          fontSize: containerRadius / 4,
+          ...bottomLabelStyle
         }}>
           {renderString(renderBottomLabel)}
         </springAnimated.span>
@@ -220,9 +226,12 @@ export const Gauge = forwardRef<SVGSVGElement>(({
         (elem) => elem && measureRef(elem)
       ])}
       {...rest}
-      width='100%'
-      height='100%'
       viewBox={`${-containerRadius} ${-containerRadius} ${containerRadius * 2} ${containerRadius * 2}`}
+      style={{
+        width: '100%',
+        height: '100%',
+        ...rest.style
+      }}
     > 
       <path
         fill={trackColor}
