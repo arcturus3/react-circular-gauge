@@ -1,8 +1,9 @@
 import { arc } from '@visx/shape'
 import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, Interpolation, InterpolatorArgs, Globals } from '@react-spring/web'
 import {getAnimated} from "@react-spring/animated";
-import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
+import {ReactNode, ComponentPropsWithRef, CSSProperties, forwardRef} from 'react';
 import {useMeasure} from 'react-use'
+import {mergeRefs} from 'react-merge-refs'
 
 // workaround for https://github.com/pmndrs/react-spring/issues/1660
 export class PatchedInterpolation<Input, Output> extends Interpolation<Input, Output> {
@@ -62,7 +63,7 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const inverseLerp = (a: number, b: number, x: number) => (x - a) / (b - a)
 const warn = (condition: boolean, message: string) => !condition && console.warn(message)
 
-export const Gauge = ({
+export const Gauge = forwardRef<SVGSVGElement>(({
   value: rawValue = 0,
   minValue = 0,
   maxValue = 100,
@@ -85,7 +86,7 @@ export const Gauge = ({
   animated = true,
   springConfig,
   ...rest
-}: GaugeProps) => {
+}: GaugeProps, ref) => {
 
   warn(minValue < maxValue, 'minValue should be less than maxValue')
   warn(0 <= startAngleDeg && startAngleDeg < 360, 'startAngle should be at least 0 and less than 360')
@@ -105,7 +106,7 @@ export const Gauge = ({
   radius  = width / (2 + max(arcWidthFactor, trackWidthFactor))
   */
 
-  const [ref, {width}] = useMeasure()
+  const [measureRef, {width}] = useMeasure()
  
   const radius = width / (2 + Math.max(arcWidthFactor, trackWidthFactor))
   const innerArcRadius = radius - radius * arcWidthFactor / 2
@@ -214,11 +215,14 @@ export const Gauge = ({
 
   return (
     <svg
+      ref={mergeRefs([
+        ref,
+        (elem) => elem && measureRef(elem)
+      ])}
       {...rest}
       width='100%'
       height='100%'
       viewBox={`${-containerRadius} ${-containerRadius} ${containerRadius * 2} ${containerRadius * 2}`}
-      ref={ref}
     > 
       <path
         fill={trackColor}
@@ -238,4 +242,4 @@ export const Gauge = ({
       </foreignObject>
     </svg>
   )
-}
+})

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -28,6 +28,10 @@ function App() {
     setTemperature(chance.integer({min: minTemperature, max: maxTemperature}))
   }
 
+  const ref = useRef(null)
+
+  useEffect(() => console.log(ref))
+
   return (
     <div
       onClick={randomizeTemperature}
@@ -51,6 +55,7 @@ function App() {
         animated={true}
         // arcCornerRadius={0}
         roundDigits={1}
+        ref={ref}
       />
     </div>
   )
