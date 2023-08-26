@@ -46,7 +46,7 @@ function App() {
         maxValue={maxTemperature}
         direction='cw'
         renderBottomLabel='°C'
-        arcColor={({normalizedValue}) => interpolatePlasma(normalizedValue)}
+        // arcColor={({normalizedValue}) => interpolatePlasma(normalizedValue)}
         arcWidth={0.1}
         animated={true}
         // arcCornerRadius={0}
