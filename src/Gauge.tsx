@@ -130,21 +130,21 @@ export const Gauge = ({
   const endAngle = endAngleRad + Math.PI
     - ((direction === 'ccw' && startAngleRad <= endAngleRad) ? Math.PI * 2 : 0)
 
-  const arcPath = (value: number) => arc({
+  const renderArc = ({normalizedValue}: RenderableStringArgs) => arc({
     innerRadius: innerArcRadius,
     outerRadius: outerArcRadius,
     cornerRadius: arcCornerRadius,
     startAngle: startAngle,
-    endAngle: lerp(startAngle, endAngle, inverseLerp(minValue, maxValue, value))
-  })(undefined) ?? undefined
+    endAngle: lerp(startAngle, endAngle, normalizedValue)
+  })(undefined) ?? ''
 
-  const trackPath = arc({
+  const renderTrack = arc({
     innerRadius: innerTrackRadius,
     outerRadius: outerTrackRadius,
     cornerRadius: trackCornerRadius,
     startAngle: startAngle,
     endAngle: endAngle
-  })(undefined) ?? undefined
+  })(undefined) ?? ''
 
   const spring = useSpring({
     value: clamp(minValue, maxValue, rawValue),
@@ -222,11 +222,11 @@ export const Gauge = ({
     > 
       <path
         fill={trackColor}
-        d={trackPath}
+        d={renderTrack}
       />
       <springAnimated.path
         fill={renderString(arcColor)}
-        d={spring.value.to(arcPath)}
+        d={renderString(renderArc)}
       />
       <foreignObject x={-contentRadius} y={-contentRadius} width={contentRadius * 2} height={contentRadius * 2}>
         <div style={{width: contentRadius * 2, height: contentRadius * 2}}>
