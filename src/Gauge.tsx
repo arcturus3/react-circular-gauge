@@ -1,7 +1,17 @@
 import { arc } from '@visx/shape'
-import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, Interpolation } from '@react-spring/web'
+import { useSpring, animated as springAnimated, AnimationConfig, SpringValue, Interpolation, InterpolatorArgs, Globals } from '@react-spring/web'
+import {getAnimated} from "@react-spring/animated";
 import {ReactNode, ComponentPropsWithRef, CSSProperties} from 'react';
 import {useMeasure} from 'react-use'
+
+// workaround for https://github.com/pmndrs/react-spring/issues/1660
+export class PatchedInterpolation<Input, Output> extends Interpolation<Input, Output> {
+  constructor(readonly source: unknown, args: InterpolatorArgs<Input, Output>) {
+    super(source, args);
+    getAnimated(this)!.setValue(this._get())
+  }
+}
+Globals.assign({to: (source, args) => new PatchedInterpolation(source, args)})
 
 type RenderableStringArgs = {
   value: number
