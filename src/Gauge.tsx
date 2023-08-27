@@ -64,7 +64,7 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 const inverseLerp = (a: number, b: number, x: number) => (x - a) / (b - a)
 const warn = (condition: boolean, message: string) => !condition && console.warn(message)
 
-export const Gauge = forwardRef<SVGSVGElement>(({
+export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   value: rawValue = 0,
   minValue = 0,
   maxValue = 100,
@@ -88,7 +88,7 @@ export const Gauge = forwardRef<SVGSVGElement>(({
   animated = true,
   springConfig,
   ...rest
-}: GaugeProps, ref) => {
+}, ref) => {
 
   warn(minValue < maxValue, 'minValue should be less than maxValue')
   warn(0 <= startAngleDeg && startAngleDeg < 360, 'startAngle should be at least 0 and less than 360')
