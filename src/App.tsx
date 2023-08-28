@@ -6,6 +6,7 @@ import './App.css'
 import { Gauge } from './Gauge'
 import { interpolatePlasma } from 'd3-scale-chromatic'
 import Chance from 'chance'
+import chroma from 'chroma-js'
 
 import '@fontsource-variable/inter'
 import '@fontsource-variable/inter-tight'
@@ -44,13 +45,9 @@ function App() {
         value={temperature}
         minValue={minTemperature}
         maxValue={maxTemperature}
-        direction='cw'
         renderBottomLabel='°C'
-        // arcColor={({normalizedValue}) => interpolatePlasma(normalizedValue)}
-        arcWidth={0.1}
-        animated={true}
-        // arcCornerRadius={0}
         roundDigits={1}
+        arcColor={({normalizedValue}) => chroma.scale(['red', 'blue'])(normalizedValue)}
       />
     </div>
   )
