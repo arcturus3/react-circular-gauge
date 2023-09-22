@@ -32,7 +32,7 @@ type RenderableNodeArgs = {
 
 type RenderableNode = ReactNode | ((args: RenderableNodeArgs) => ReactNode)
 
-type GaugeProps = ComponentPropsWithRef<'svg'> & {
+export type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
   minValue?: number
   maxValue?: number
@@ -44,7 +44,6 @@ type GaugeProps = ComponentPropsWithRef<'svg'> & {
   renderBottomLabel?: RenderableString
   renderContent?: RenderableNode
   roundDigits?: number
-  radius?: number
   arcWidth?: number
   trackWidth?: number
   arcCornerRadius?: number

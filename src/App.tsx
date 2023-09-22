@@ -3,10 +3,11 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-import { Gauge } from './Gauge'
+import { Gauge, GaugeProps } from './Gauge'
 import { interpolatePlasma } from 'd3-scale-chromatic'
 import Chance from 'chance'
 import chroma from 'chroma-js'
+import {useControls} from 'leva'
 
 import '@fontsource-variable/inter'
 import '@fontsource-variable/inter-tight'
@@ -15,65 +16,86 @@ import '@fontsource/mononoki'
 
 const chance = new Chance()
 
-function App() {
-  const minTemperature = -100
-  const maxTemperature = 200
-  const [temperature, setTemperature] = useState(minTemperature)
-  const [count, setCount] = useState(0)
+const Example = ({gaugeProps}: {gaugeProps: GaugeProps}) => {
+  const [value, setValue] = useState(gaugeProps.value)
 
-  // let valuePrefix = '' // this should be set when interpolating value
-  // if (props.value < clampedValue) valuePrefix = '<'
-  // if (props.value > clampedValue) valuePrefix = '>'
-
-  const randomizeTemperature = () => {
-    setTemperature(chance.integer({min: minTemperature, max: maxTemperature}))
-  }
+  const randomize = () => setValue(chance.floating({
+    min: gaugeProps.minValue ?? 0,
+    max: gaugeProps.maxValue ?? 100
+  }))
 
   return (
     <div
-      onClick={randomizeTemperature}
+      onClick={randomize}
       style={{
-        position: 'fixed',
-        left: 20,
-        bottom: 20,
-        width: 300,
-        height: 300,
-        cursor: 'pointer'
+        width: 250,
+        height: 250,
       }}
     >
-      <Gauge
-        value={temperature}
-        minValue={minTemperature}
-        maxValue={maxTemperature}
-        renderBottomLabel='°C'
-        roundDigits={1}
-        arcColor={({normalizedValue}) => chroma.scale(['red', 'blue'])(normalizedValue)}
-      />
+      <Gauge {...gaugeProps} value={value} />
     </div>
   )
+}
 
+function App() {
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Example
+        gaugeProps={{}}
+      />
+      <Example
+        gaugeProps={{
+          renderValue: ({roundedValue: formattedValue}) => `${formattedValue}%`
+        }}
+      />
+      <Example
+        gaugeProps={{
+          value: 50,
+          minValue: 0,
+          maxValue: 100,
+          renderTopLabel: ({value}) => value >= 50 ? 'hot' : 'cold',
+          renderBottomLabel: '°C',
+          arcColor: ({normalizedValue}) => chroma.scale(['red', 'blue'])(normalizedValue),
+          topLabelStyle: {
+            fontSize: 20,
+            backgroundColor: 'hsl(0 0% 0%)',
+            padding: '4px 8px',
+            borderRadius: 8
+          }
+        }}
+      />
+      <Example
+        gaugeProps={{
+          value: 50,
+          minValue: 0,
+          maxValue: 100,
+          renderValue: ({roundedValue}) => `${roundedValue}m`,
+          renderBottomLabel: 'altitude',
+          bottomLabelStyle: {fontSize: 20},
+          roundDigits: 1,
+          style: {fontFamily: 'Mononoki'},
+          startAngle: 45,
+          endAngle: 315 // add epsilon to track rendering angles to fix artifact
+          // valueStyle: {fontFamily: 'Mononoki'}
+        }}
+      />
+      <Example
+        gaugeProps={{
+          minValue: 0,
+          maxValue: 100,
+          renderValue: ({roundedValue}) => `${roundedValue}m`, // greater than/less than when out of bounds
+          renderBottomLabel: 'altitude',
+          bottomLabelStyle: {fontSize: 20},
+          roundDigits: 1,
+          style: {fontFamily: 'Mononoki'},
+          startAngle: 45,
+          endAngle: 315, // add epsilon to track rendering angles to fix artifact
+          // valueStyle: {fontFamily: 'Mononoki'}
+          arcWidth: 0.25,
+          arcCornerRadius: 0.25,
+          trackCornerRadius: 0.25
+        }}
+      />
     </>
   )
 }
