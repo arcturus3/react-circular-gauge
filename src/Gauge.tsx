@@ -183,7 +183,8 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
     }}>
       <div style={{
         width: '100%',
-        position: 'relative'
+        position: 'relative',
+        textAlign: 'center',
       }}>
         <springAnimated.span style={{
           lineHeight: 1.5,
