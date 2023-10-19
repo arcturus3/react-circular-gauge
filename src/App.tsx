@@ -31,8 +31,8 @@ const Example = (props: ExampleProps) => {
           ? '#000000'
           : '#ffffff',
         backgroundColor: props.mode === 'light'
-          ? 'hsl(0, 0%, 90%)'
-          : 'hsl(0, 0%, 10%)',
+          ? '#e6e6e6'
+          : '#1a1a1a',
         userSelect: 'none',
         cursor: 'pointer',
       }}
@@ -56,7 +56,7 @@ export const App = () => {
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackWidth: 0,
-            arcColor: ({normalizedValue}) => chroma.scale(['0061ff', '60efff']).correctLightness()(normalizedValue).css(),
+            arcColor: ({normalizedValue}) => chroma.scale(['#0061ff', '#60efff']).correctLightness()(normalizedValue).css(),
           }}
         />
         <Example
@@ -64,7 +64,7 @@ export const App = () => {
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackColor: '#1b1b1b',
-            arcColor: '#DC143C',
+            arcColor: '#dc143c',
             direction: 'ccw',
             startAngle: 0,
             endAngle: 90,
@@ -73,6 +73,7 @@ export const App = () => {
             springConfig: config.stiff,
             renderValue: ({roundedValue: formattedValue}) => `${formattedValue}%`,
             valueStyle: {
+              color: '#1b1b1b',
               fontFamily: 'Merriweather, sans-serif',
             }
           }}
@@ -83,12 +84,12 @@ export const App = () => {
           gaugeProps={{
             minValue: 0,
             maxValue: 10,
-            trackColor: '#98817B',
-            arcColor: '#AA98A9',
+            trackColor: '#98817b',
+            arcColor: '#aa98a9',
             arcWidth: 0.3,
             arcCornerRadius: 0.1,
             trackCornerRadius: 0.1,
-            valueStyle: { // doesn't work using style prop???
+            valueStyle: {
               fontSize: 100, // relative font sizes
               fontWeight: 600,
             },
@@ -103,7 +104,7 @@ export const App = () => {
             value: 0,
             minValue: -50,
             maxValue: 50,
-            trackColor: '#101010',
+            trackColor: '#000000',
             arcColor: ({normalizedValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normalizedValue).css(),
             renderTopLabel: ({value}) => value >= 0 ? 'hot' : 'cold',
             renderBottomLabel: '°C',
@@ -119,7 +120,7 @@ export const App = () => {
             topLabelStyle: {
               fontSize: 20,
               backgroundColor: '#ffffff',
-              color: '#101010',
+              color: '#000000',
               padding: '4px 8px',
               borderRadius: 8
             }
@@ -131,16 +132,15 @@ export const App = () => {
           gaugeProps={{
             minValue: 0,
             maxValue: 100,
-            arcColor: '#00FF7F',
+            arcColor: '#00ff7f',
             trackColor: '#222222',
             renderValue: ({roundedValue}) => `${roundedValue}m`,
             renderBottomLabel: 'altitude',
             bottomLabelStyle: {fontSize: 20, fontFamily: 'Merriweather, sans-serif'},
             roundDigits: 1,
-            style: {fontFamily: 'Mononoki, sans-serif'},
             startAngle: 0,
             endAngle: 180,
-            // valueStyle: {fontFamily: 'Mononoki'}
+            valueStyle: {fontFamily: 'Mononoki, sans-serif'},
             arcWidth: 0.05,
             trackWidth: 0.05,
             arcCornerRadius: 0,
@@ -153,7 +153,7 @@ export const App = () => {
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackWidth: 0,
-            arcColor: '#FF8F00',
+            arcColor: '#ff8f00',
             renderContent: ({normalizedValue}) => (
               <div style={{
                 width: '100%',
@@ -163,7 +163,7 @@ export const App = () => {
                 alignItems: 'center',
               }}>
                 <animated.div style={{width: '50%', height: '50%', transform: normalizedValue.to(value => `rotate(${value}turn)`)}}>
-                  <TbNeedle size='100%' color='white' style={{transform: 'rotate(-45deg)'}} />
+                  <TbNeedle size='100%' color='#ffffff' style={{transform: 'rotate(-45deg)'}} />
                 </animated.div>
             </div>
             ),
