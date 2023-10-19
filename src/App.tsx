@@ -56,7 +56,6 @@ export const App = () => {
           mode='dark'
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
-            trackWidth: 0,
             arcColor: ({normValue}) => chroma.scale(['#0061ff', '#60efff']).correctLightness()(normValue).css(),
           }}
         />
@@ -64,19 +63,19 @@ export const App = () => {
           mode='light'
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
-            trackColor: '#1b1b1b',
-            arcColor: '#dc143c',
-            direction: 'ccw',
             startAngle: 0,
             endAngle: 90,
-            trackWidth: 0.25,
-            arcWidth: 0.05,
-            springConfig: config.stiff,
+            direction: 'ccw',
             renderValue: ({fmtValue}) => `${fmtValue}%`,
+            arcWidth: 0.05,
+            trackWidth: 0.25,
+            arcColor: '#dc143c',
+            trackColor: '#1b1b1b',
             valueStyle: {
               color: '#1b1b1b',
               fontFamily: 'Merriweather, sans-serif',
-            }
+            },
+            springConfig: config.stiff,
           }}
         />
         <Example
@@ -85,17 +84,17 @@ export const App = () => {
           gaugeProps={{
             minValue: 0,
             maxValue: 10,
-            trackColor: '#98817b',
-            arcColor: '#aa98a9',
+            startAngle: 45,
+            endAngle: 315,
             arcWidth: 0.3,
             arcCornerRadius: 0.1,
             trackCornerRadius: 0.1,
+            arcColor: '#aa98a9',
+            trackColor: '#98817b',
             valueStyle: {
               fontSize: '150%',
               fontWeight: 600,
             },
-            startAngle: 45,
-            endAngle: 315,
           }}
         />
         <Example
@@ -105,10 +104,6 @@ export const App = () => {
             value: 0,
             minValue: -50,
             maxValue: 50,
-            trackColor: '#000000',
-            arcColor: ({normValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normValue).css(),
-            renderTopLabel: ({value}) => value >= 0 ? 'hot' : 'cold',
-            renderBottomLabel: '°C',
             renderValue: ({value, fmtValue, rawValue}) => {
               const minValue = -50
               const maxValue = 50
@@ -118,6 +113,10 @@ export const App = () => {
                 return '>' + fmtValue
               return fmtValue
             },
+            renderTopLabel: ({value}) => value >= 0 ? 'hot' : 'cold',
+            renderBottomLabel: '°C',
+            arcColor: ({normValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normValue).css(),
+            trackColor: '#000000',
             topLabelStyle: {
               fontSize: '35%',
               backgroundColor: '#ffffff',
@@ -131,21 +130,19 @@ export const App = () => {
           mode='dark'
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
-            minValue: 0,
-            maxValue: 100,
-            arcColor: '#00ff7f',
-            trackColor: '#222222',
-            renderValue: ({fmtValue}) => `${fmtValue}m`,
-            renderBottomLabel: 'altitude',
-            bottomLabelStyle: {fontSize: '35%', fontFamily: 'Merriweather, sans-serif'},
-            roundDigits: 1,
             startAngle: 0,
             endAngle: 180,
-            valueStyle: {fontFamily: 'Mononoki, sans-serif'},
+            renderValue: ({fmtValue}) => `${fmtValue}m`,
+            renderBottomLabel: 'altitude',
+            roundDigits: 1,
             arcWidth: 0.05,
             trackWidth: 0.05,
             arcCornerRadius: 0,
             trackCornerRadius: 0,
+            arcColor: '#00ff7f',
+            trackColor: '#222222',
+            valueStyle: {fontFamily: 'Mononoki, sans-serif'},
+            bottomLabelStyle: {fontSize: '35%', fontFamily: 'Merriweather, sans-serif'},
             animated: false,
           }}
         />
@@ -153,8 +150,6 @@ export const App = () => {
           mode='dark'
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
-            trackWidth: 0,
-            arcColor: '#ff8f00',
             renderContent: ({normValue}) => (
               <div style={{
                 width: '100%',
@@ -166,8 +161,9 @@ export const App = () => {
                 <animated.div style={{width: '50%', height: '50%', transform: normValue.to(value => `rotate(${value}turn)`)}}>
                   <TbNeedle size='100%' color='#ffffff' style={{transform: 'rotate(-45deg)'}} />
                 </animated.div>
-            </div>
+              </div>
             ),
+            arcColor: '#ff8f00',
             springConfig: config.wobbly,
           }}
         />
