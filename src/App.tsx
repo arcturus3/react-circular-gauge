@@ -1,27 +1,13 @@
-import { useState, useRef, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-
-import { Gauge, GaugeProps } from './Gauge'
-import { interpolatePlasma } from 'd3-scale-chromatic'
+import { useState } from 'react'
+import { animated, config } from '@react-spring/web'
+import { TbNeedle } from 'react-icons/tb'
 import Chance from 'chance'
 import chroma from 'chroma-js'
-import {useControls} from 'leva'
-
+import { Gauge, GaugeProps } from './Gauge'
 import '@fontsource-variable/inter'
-import '@fontsource-variable/inter-tight'
 import '@fontsource/merriweather'
 import '@fontsource/mononoki'
 
-import { animated, config } from '@react-spring/web'
-import {TbNeedle} from 'react-icons/tb'
-/*
-
-  font-family: 'Inter Variable', sans-serif;
-  /* font-family: 'Inter Tight Variable', sans-serif; */
-  /* font-family: 'Merriweather', sans-serif; */
-  /* font-family: 'Mononoki', sans-serif; */
-  
 const chance = new Chance()
 
 type ExampleProps = {
@@ -60,7 +46,7 @@ const Example = (props: ExampleProps) => {
   )
 }
 
-function App() {
+export const App = () => {
   return (
     <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 50}}>
       <Example
@@ -82,6 +68,9 @@ function App() {
           arcWidth: 0.05,
           springConfig: config.stiff,
           renderValue: ({roundedValue: formattedValue}) => `${formattedValue}%`,
+          valueStyle: {
+            fontFamily: 'Merriweather, sans-serif',
+          }
         }}
       />
       <Example
@@ -131,7 +120,7 @@ function App() {
           renderBottomLabel: 'altitude',
           bottomLabelStyle: {fontSize: 20},
           roundDigits: 1,
-          style: {fontFamily: 'Mononoki'},
+          style: {fontFamily: 'Mononoki, sans-serif'},
           startAngle: 0,
           endAngle: 180, // add epsilon to track rendering angles to fix artifact
           // valueStyle: {fontFamily: 'Mononoki'}
@@ -166,5 +155,3 @@ function App() {
     </div>
   )
 }
-
-export default App
