@@ -46,6 +46,7 @@ export const App = () => {
   return (
     <>
       <div style={{marginBottom: 50, fontSize: 18, lineHeight: 1.5}}>
+        <h1>react-circular-gauge</h1>
         <p>Click on a gauge to randomize it</p>
         <a href='https://github.com/arcturus3/react-circular-gauge'>Check out the source</a>
       </div>
@@ -92,12 +93,12 @@ export const App = () => {
               fontWeight: 600,
             },
             startAngle: 45,
-            endAngle: 315, // add epsilon to track rendering angles to fix artifact
+            endAngle: 315,
           }}
         />
         <Example
           mode='dark'
-          randomize={() => chance.floating({min: -50, max: 50})}
+          randomize={() => chance.floating({min: -100, max: 100})}
           gaugeProps={{
             value: 0,
             minValue: -50,
@@ -106,6 +107,15 @@ export const App = () => {
             arcColor: ({normalizedValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normalizedValue).css(),
             renderTopLabel: ({value}) => value >= 0 ? 'hot' : 'cold',
             renderBottomLabel: '°C',
+            renderValue: ({value, roundedValue, rawValue}) => {
+              const minValue = -50
+              const maxValue = 50
+              if (rawValue < minValue && value === minValue)
+                return '<' + roundedValue
+              if (rawValue > maxValue && value === maxValue)
+                return '>' + roundedValue
+              return roundedValue
+            },
             topLabelStyle: {
               fontSize: 20,
               backgroundColor: '#ffffff',
@@ -123,18 +133,18 @@ export const App = () => {
             maxValue: 100,
             arcColor: '#00FF7F',
             trackColor: '#222222',
-            renderValue: ({roundedValue}) => `${roundedValue}m`, // greater than/less than when out of bounds
+            renderValue: ({roundedValue}) => `${roundedValue}m`,
             renderBottomLabel: 'altitude',
             bottomLabelStyle: {fontSize: 20, fontFamily: 'Merriweather, sans-serif'},
             roundDigits: 1,
             style: {fontFamily: 'Mononoki, sans-serif'},
             startAngle: 0,
-            endAngle: 180, // add epsilon to track rendering angles to fix artifact
+            endAngle: 180,
             // valueStyle: {fontFamily: 'Mononoki'}
             arcWidth: 0.05,
             trackWidth: 0.05,
-            arcCornerRadius: 0.25,
-            trackCornerRadius: 0.25,
+            arcCornerRadius: 0,
+            trackCornerRadius: 0,
             animated: false,
           }}
         />
