@@ -30,16 +30,16 @@ type ExampleProps = {
 }
 
 const Example = (props: ExampleProps) => {
-  const [value, setValue] = useState(props.gaugeProps.value)
-
-  const randomize = () => setValue(chance.floating({
+  const randomValue = () => chance.floating({
     min: props.gaugeProps.minValue ?? 0,
     max: props.gaugeProps.maxValue ?? 100
-  }))
+  })
+
+  const [value, setValue] = useState(randomValue())
 
   return (
     <div
-      onClick={randomize}
+      onClick={() => setValue(randomValue())}
       style={{
         maxWidth: 250,
         maxHeight: 250,
