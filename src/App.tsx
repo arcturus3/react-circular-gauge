@@ -11,21 +11,17 @@ import '@fontsource/mononoki'
 const chance = new Chance()
 
 type ExampleProps = {
-  gaugeProps: GaugeProps,
-  mode: 'light' | 'dark',
+  mode: 'light' | 'dark'
+  randomize: () => number
+  gaugeProps: GaugeProps
 }
 
 const Example = (props: ExampleProps) => {
-  const randomValue = () => chance.floating({
-    min: props.gaugeProps.minValue ?? 0,
-    max: props.gaugeProps.maxValue ?? 100
-  })
-
-  const [value, setValue] = useState(randomValue())
+  const [value, setValue] = useState(props.randomize())
 
   return (
     <div
-      onClick={() => setValue(randomValue())}
+      onClick={() => setValue(props.randomize())}
       style={{
         maxWidth: 250,
         maxHeight: 250,
@@ -56,6 +52,7 @@ export const App = () => {
       <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 50}}>
         <Example
           mode='dark'
+          randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackWidth: 0,
             arcColor: ({normalizedValue}) => chroma.scale(['0061ff', '60efff']).correctLightness()(normalizedValue).css(),
@@ -63,6 +60,7 @@ export const App = () => {
         />
         <Example
           mode='light'
+          randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackColor: '#1b1b1b',
             arcColor: '#DC143C',
@@ -80,6 +78,7 @@ export const App = () => {
         />
         <Example
           mode='light'
+          randomize={() => chance.integer({min: 0, max: 10})}
           gaugeProps={{
             minValue: 0,
             maxValue: 10,
@@ -98,6 +97,7 @@ export const App = () => {
         />
         <Example
           mode='dark'
+          randomize={() => chance.floating({min: -50, max: 50})}
           gaugeProps={{
             value: 0,
             minValue: -50,
@@ -116,6 +116,7 @@ export const App = () => {
         />
         <Example
           mode='dark'
+          randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             minValue: 0,
             maxValue: 100,
@@ -138,6 +139,7 @@ export const App = () => {
         />
         <Example
           mode='dark'
+          randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackWidth: 0,
             arcColor: '#FF8F00',
