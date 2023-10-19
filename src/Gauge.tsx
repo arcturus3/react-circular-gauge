@@ -76,7 +76,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   renderContent,
   roundDigits = 0,
   arcWidth: arcWidthFactor = 0.1,
-  trackWidth: trackWidthFactor = 0.09, // less than arcWidth to avoid rendering artifacts
+  trackWidth: trackWidthFactor = 0.1,
   arcCornerRadius: arcCornerRadiusFactor = 0.5,
   trackCornerRadius: trackCornerRadiusFactor = 0.5,
   arcColor = 'hsl(0 0% 0%)',
@@ -109,7 +109,11 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   */
 
   const [measureRef, {width, height}] = useMeasure()
- 
+
+  // reduce trackWidth by epsilon to avoid rendering artifacts in the common case where arcWidth = trackWidth
+  if (arcWidthFactor === trackWidthFactor)
+    trackWidthFactor -= 0.01
+
   const radius = Math.min(width, height) / (2 + Math.max(arcWidthFactor, trackWidthFactor))
   const innerArcRadius = radius - radius * arcWidthFactor / 2
   const outerArcRadius = radius + radius * arcWidthFactor / 2
