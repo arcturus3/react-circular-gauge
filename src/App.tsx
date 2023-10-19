@@ -35,6 +35,7 @@ const Example = (props: ExampleProps) => {
           : '#1a1a1a',
         userSelect: 'none',
         cursor: 'pointer',
+        WebkitTapHighlightColor: 'transparent',
       }}
     >
       <Gauge {...props.gaugeProps} value={value} />
