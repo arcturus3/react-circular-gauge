@@ -88,7 +88,7 @@ export const App = () => {
             arcCornerRadius: 0.1,
             trackCornerRadius: 0.1,
             valueStyle: { // doesn't work using style prop???
-              fontSize: 100,
+              fontSize: 100, // relative font sizes
               fontWeight: 600,
             },
             startAngle: 45,
@@ -108,7 +108,8 @@ export const App = () => {
             renderBottomLabel: '°C',
             topLabelStyle: {
               fontSize: 20,
-              backgroundColor: 'hsl(0 0% 0%)',
+              backgroundColor: '#ffffff',
+              color: '#101010',
               padding: '4px 8px',
               borderRadius: 8
             }
@@ -124,7 +125,7 @@ export const App = () => {
             trackColor: '#222222',
             renderValue: ({roundedValue}) => `${roundedValue}m`, // greater than/less than when out of bounds
             renderBottomLabel: 'altitude',
-            bottomLabelStyle: {fontSize: 20},
+            bottomLabelStyle: {fontSize: 20, fontFamily: 'Merriweather, sans-serif'},
             roundDigits: 1,
             style: {fontFamily: 'Mononoki, sans-serif'},
             startAngle: 0,
