@@ -10,3 +10,11 @@ body {
   margin: 0;
   padding: 50px;
 }
+
+p {
+  margin: 0;
+}
+
+a {
+  color: #ffffff;
+}
