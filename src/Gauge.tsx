@@ -243,10 +243,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
       />
       <foreignObject x={-contentRadius} y={-contentRadius} width={contentRadius * 2} height={contentRadius * 2}>
         <div style={{width: contentRadius * 2, height: contentRadius * 2}}>
-          {renderValue !== undefined || renderTopLabel !== undefined || renderBottomLabel !== undefined
-            ? defaultContent
-            : renderNode(renderContent)
-          }
+          {renderContent === undefined ? defaultContent : renderNode(renderContent)}
         </div>
       </foreignObject>
     </svg>
