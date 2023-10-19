@@ -16,8 +16,8 @@ Globals.assign({to: (source, args) => new PatchedInterpolation(source, args)})
 
 type RenderableStringArgs = {
   value: number
-  roundedValue: string
-  normalizedValue: number
+  fmtValue: string
+  normValue: number
   rawValue: number
 }
 
@@ -25,8 +25,8 @@ type RenderableString = string | ((args: RenderableStringArgs) => string)
 
 type RenderableNodeArgs = {
   value: SpringValue<number>
-  roundedValue: Interpolation<number, string>
-  normalizedValue: Interpolation<number, number>
+  fmtValue: Interpolation<number, string>
+  normValue: Interpolation<number, number>
   rawValue: number
 }
 
@@ -70,7 +70,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   startAngle: startAngleDeg = 0,
   endAngle: endAngleDeg = 0,
   direction = 'cw',
-  renderValue = ({roundedValue}) => roundedValue,
+  renderValue = ({fmtValue}) => fmtValue,
   renderTopLabel,
   renderBottomLabel,
   renderContent,
@@ -137,12 +137,12 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   const endAngle = endAngleRad + Math.PI
     - ((direction === 'ccw' && startAngleRad <= endAngleRad) ? Math.PI * 2 : 0)
 
-  const renderArc = ({normalizedValue}: RenderableStringArgs) => arc({
+  const renderArc = ({normValue}: RenderableStringArgs) => arc({
     innerRadius: innerArcRadius,
     outerRadius: outerArcRadius,
     cornerRadius: arcCornerRadius,
     startAngle: startAngle,
-    endAngle: lerp(startAngle, endAngle, normalizedValue)
+    endAngle: lerp(startAngle, endAngle, normValue)
   })(undefined) ?? ''
 
   const renderTrack = arc({
@@ -162,8 +162,8 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   const renderString = (renderable: RenderableString | undefined) => typeof renderable === 'function'
     ? spring.value.to(value => renderable({
       value: value,
-      roundedValue: round(roundDigits, value),
-      normalizedValue: inverseLerp(minValue, maxValue, value),
+      fmtValue: round(roundDigits, value),
+      normValue: inverseLerp(minValue, maxValue, value),
       rawValue: rawValue
     }))
     : renderable
@@ -171,8 +171,8 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
   const renderNode = (renderable: RenderableNode) => typeof renderable === 'function'
     ? renderable({
       value: spring.value,
-      roundedValue: spring.value.to(value => round(roundDigits, value)),
-      normalizedValue: spring.value.to(value => inverseLerp(minValue, maxValue, value)),
+      fmtValue: spring.value.to(value => round(roundDigits, value)),
+      normValue: spring.value.to(value => inverseLerp(minValue, maxValue, value)),
       rawValue: rawValue
     })
     : renderable

@@ -57,7 +57,7 @@ export const App = () => {
           randomize={() => chance.floating({min: 0, max: 100})}
           gaugeProps={{
             trackWidth: 0,
-            arcColor: ({normalizedValue}) => chroma.scale(['#0061ff', '#60efff']).correctLightness()(normalizedValue).css(),
+            arcColor: ({normValue}) => chroma.scale(['#0061ff', '#60efff']).correctLightness()(normValue).css(),
           }}
         />
         <Example
@@ -72,7 +72,7 @@ export const App = () => {
             trackWidth: 0.25,
             arcWidth: 0.05,
             springConfig: config.stiff,
-            renderValue: ({roundedValue: formattedValue}) => `${formattedValue}%`,
+            renderValue: ({fmtValue}) => `${fmtValue}%`,
             valueStyle: {
               color: '#1b1b1b',
               fontFamily: 'Merriweather, sans-serif',
@@ -106,17 +106,17 @@ export const App = () => {
             minValue: -50,
             maxValue: 50,
             trackColor: '#000000',
-            arcColor: ({normalizedValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normalizedValue).css(),
+            arcColor: ({normValue}) => chroma.scale(['#140b34','#84206b','#e55c30','#f6d746']).correctLightness()(normValue).css(),
             renderTopLabel: ({value}) => value >= 0 ? 'hot' : 'cold',
             renderBottomLabel: '°C',
-            renderValue: ({value, roundedValue, rawValue}) => {
+            renderValue: ({value, fmtValue, rawValue}) => {
               const minValue = -50
               const maxValue = 50
               if (rawValue < minValue && value === minValue)
-                return '<' + roundedValue
+                return '<' + fmtValue
               if (rawValue > maxValue && value === maxValue)
-                return '>' + roundedValue
-              return roundedValue
+                return '>' + fmtValue
+              return fmtValue
             },
             topLabelStyle: {
               fontSize: '35%',
@@ -135,7 +135,7 @@ export const App = () => {
             maxValue: 100,
             arcColor: '#00ff7f',
             trackColor: '#222222',
-            renderValue: ({roundedValue}) => `${roundedValue}m`,
+            renderValue: ({fmtValue}) => `${fmtValue}m`,
             renderBottomLabel: 'altitude',
             bottomLabelStyle: {fontSize: '35%', fontFamily: 'Merriweather, sans-serif'},
             roundDigits: 1,
@@ -155,7 +155,7 @@ export const App = () => {
           gaugeProps={{
             trackWidth: 0,
             arcColor: '#ff8f00',
-            renderContent: ({normalizedValue}) => (
+            renderContent: ({normValue}) => (
               <div style={{
                 width: '100%',
                 height: '100%',
@@ -163,7 +163,7 @@ export const App = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-                <animated.div style={{width: '50%', height: '50%', transform: normalizedValue.to(value => `rotate(${value}turn)`)}}>
+                <animated.div style={{width: '50%', height: '50%', transform: normValue.to(value => `rotate(${value}turn)`)}}>
                   <TbNeedle size='100%' color='#ffffff' style={{transform: 'rotate(-45deg)'}} />
                 </animated.div>
             </div>
