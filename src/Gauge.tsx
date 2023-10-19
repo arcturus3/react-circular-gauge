@@ -189,10 +189,11 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
         width: '100%',
         position: 'relative',
         textAlign: 'center',
+        fontSize: containerRadius / 2,
       }}>
         <springAnimated.span style={{
           lineHeight: 1.5,
-          fontSize: containerRadius / 2,
+          fontSize: '100%',
           ...valueStyle
         }}>
           {renderString(renderValue)}
@@ -203,7 +204,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
           left: '50%',
           transform: 'translate(-50%, -100%)',
           lineHeight: 'normal',
-          fontSize: containerRadius / 4,
+          fontSize: '50%',
           ...topLabelStyle
         }}>
           {renderString(renderTopLabel)}
@@ -214,7 +215,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(({
           left: '50%',
           transform: 'translate(-50%, 100%)',
           lineHeight: 'normal',
-          fontSize: containerRadius / 4,
+          fontSize: '50%',
           ...bottomLabelStyle
         }}>
           {renderString(renderBottomLabel)}

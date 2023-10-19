@@ -90,7 +90,7 @@ export const App = () => {
             arcCornerRadius: 0.1,
             trackCornerRadius: 0.1,
             valueStyle: {
-              fontSize: 100, // relative font sizes
+              fontSize: '150%',
               fontWeight: 600,
             },
             startAngle: 45,
@@ -118,7 +118,7 @@ export const App = () => {
               return roundedValue
             },
             topLabelStyle: {
-              fontSize: 20,
+              fontSize: '35%',
               backgroundColor: '#ffffff',
               color: '#000000',
               padding: '4px 8px',
@@ -136,7 +136,7 @@ export const App = () => {
             trackColor: '#222222',
             renderValue: ({roundedValue}) => `${roundedValue}m`,
             renderBottomLabel: 'altitude',
-            bottomLabelStyle: {fontSize: 20, fontFamily: 'Merriweather, sans-serif'},
+            bottomLabelStyle: {fontSize: '35%', fontFamily: 'Merriweather, sans-serif'},
             roundDigits: 1,
             startAngle: 0,
             endAngle: 180,
