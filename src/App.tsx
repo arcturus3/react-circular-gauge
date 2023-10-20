@@ -75,25 +75,6 @@ export const App = () => {
           }}
         />
         <Example
-          mode="light"
-          randomize={() => chance.integer({ min: 0, max: 10 })}
-          gaugeProps={{
-            minValue: 0,
-            maxValue: 10,
-            startAngle: 45,
-            endAngle: 315,
-            arcWidth: 0.3,
-            arcCornerRadius: 0.1,
-            trackCornerRadius: 0.1,
-            arcColor: '#aa98a9',
-            trackColor: '#98817b',
-            valueStyle: {
-              fontSize: '150%',
-              fontWeight: 600,
-            },
-          }}
-        />
-        <Example
           mode="dark"
           randomize={() => chance.floating({ min: -100, max: 100 })}
           gaugeProps={{
@@ -118,6 +99,25 @@ export const App = () => {
               color: '#000000',
               padding: '4px 8px',
               borderRadius: 8,
+            },
+          }}
+        />
+        <Example
+          mode="light"
+          randomize={() => chance.integer({ min: 0, max: 10 })}
+          gaugeProps={{
+            minValue: 0,
+            maxValue: 10,
+            startAngle: 45,
+            endAngle: 315,
+            arcWidth: 0.3,
+            arcCornerRadius: 0.1,
+            trackCornerRadius: 0.1,
+            arcColor: '#aa98a9',
+            trackColor: '#98817b',
+            valueStyle: {
+              fontSize: '150%',
+              fontWeight: 600,
             },
           }}
         />
