@@ -1,4 +1,4 @@
-![](docs/banner.png)
+![](banner.png)
 
 # React Circular Gauge
 

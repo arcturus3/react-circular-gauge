@@ -1,11 +1,27 @@
 {
   "name": "react-circular-gauge",
   "version": "1.0.0",
+  "description": "Pretty gauges for React",
+  "keywords": [
+    "react",
+    "gauge",
+    "progress-bar",
+    "progress-circle",
+    "component",
+    "animated",
+    "svg"
+  ],
+  "repository": "github:arcturus3/react-circular-gauge",
+  "homepage": "https://arcturus3.github.io/react-circular-gauge",
+  "bugs": "https://github.com/arcturus3/react-circular-gauge/issues",
+  "license": "MIT",
+  "author": "Arti Schmidt",
   "type": "module",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
   "files": [
-    "lib"
+    "lib",
+    "banner.png"
   ],
   "scripts": {
     "dev": "vite --config vite.config.app.ts",
