@@ -43,7 +43,7 @@ export const App = () => {
   return (
     <>
       <div style={{ marginBottom: 25, fontSize: 18, lineHeight: 1.5 }}>
-        <h1 style={{ marginTop: 0, marginBottom: 10, fontSize: 30 }}>react-circular-gauge</h1>
+        <h1 style={{ marginTop: 0, marginBottom: 10, fontSize: 30 }}>React Circular Gauge</h1>
         <p>Click on a gauge to randomize it</p>
         <a href="https://github.com/arcturus3/react-circular-gauge">Check out the source</a>
       </div>
