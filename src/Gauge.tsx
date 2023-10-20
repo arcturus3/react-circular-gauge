@@ -92,7 +92,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(
       trackWidth: trackWidthFactor = 0.1,
       arcCornerRadius: arcCornerRadiusFactor = 0.5,
       trackCornerRadius: trackCornerRadiusFactor = 0.5,
-      arcColor = '#000000',
+      arcColor = 'black',
       trackColor = 'transparent',
       valueStyle,
       topLabelStyle,
