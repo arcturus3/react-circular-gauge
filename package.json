@@ -1,7 +1,6 @@
 {
   "name": "react-circular-gauge",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "main": "lib/main.js",
   "types": "lib/main.d.ts",
@@ -51,6 +50,6 @@
     "vite-plugin-externalize-deps": "^0.7.0"
   },
   "peerDependencies": {
-    "react": "^16.8.0"
+    "react": ">=16.8.0"
   }
 }
