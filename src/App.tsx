@@ -166,6 +166,19 @@ export const App = () => {
             springConfig: config.wobbly,
           }}
         />
+        <Example
+          mode="dark"
+          randomize={() => chance.floating({ min: -100, max: 100 })}
+          gaugeProps={{
+            arcColor: ({ normValue }) => chroma.scale(['#0061ff', '#60efff']).correctLightness()(normValue).css(),
+            trackColor: '#fff3',
+            minValue: -100,
+            maxValue: 100,
+            startValue: 0,
+            startAngle: 40,
+            endAngle: 320,
+          }}
+        />
       </div>
     </>
   )
