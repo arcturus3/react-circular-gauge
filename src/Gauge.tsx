@@ -47,6 +47,7 @@ export type GaugeProps = ComponentPropsWithRef<'svg'> & {
   value?: number
   minValue?: number
   maxValue?: number
+  startValue?: number
   startAngle?: number
   endAngle?: number
   direction?: 'cw' | 'ccw'
@@ -79,6 +80,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(
     {
       value: rawValue = 0,
       minValue = 0,
+      startValue = minValue,
       maxValue = 100,
       startAngle: startAngleDeg = 0,
       endAngle: endAngleDeg = 0,
@@ -104,6 +106,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(
     ref,
   ) => {
     warn(minValue < maxValue, 'minValue should be less than maxValue')
+    warn(startValue >= minValue && startValue <= maxValue, 'startValue should be between minValue and maxValue')
     warn(0 <= startAngleDeg && startAngleDeg < 360, 'startAngle should be at least 0 and less than 360')
     warn(0 <= endAngleDeg && endAngleDeg < 360, 'endAngle should be at least 0 and less than 360')
     warn(roundDigits >= 0, 'roundDigits should be nonnegative')
@@ -153,15 +156,22 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(
     const endAngleRad = (endAngleDeg * Math.PI) / 180
     const startAngle = startAngleRad + Math.PI - (direction === 'cw' && startAngleRad >= endAngleRad ? Math.PI * 2 : 0)
     const endAngle = endAngleRad + Math.PI - (direction === 'ccw' && startAngleRad <= endAngleRad ? Math.PI * 2 : 0)
+    const startNormValue = inverseLerp(minValue, maxValue, startValue)
+    const startArcAngle = lerp(startAngle, endAngle, startNormValue)
 
-    const renderArc = ({ normValue }: RenderableStringArgs) =>
-      arc({
-        innerRadius: innerArcRadius,
-        outerRadius: outerArcRadius,
-        cornerRadius: arcCornerRadius,
-        startAngle: startAngle,
-        endAngle: lerp(startAngle, endAngle, normValue),
-      })(undefined) ?? ''
+    const renderArc = ({ normValue }: RenderableStringArgs) => {
+      const angleA = startArcAngle
+      const angleB = lerp(startAngle, endAngle, normValue)
+      return (
+        arc({
+          innerRadius: innerArcRadius,
+          outerRadius: outerArcRadius,
+          cornerRadius: arcCornerRadius,
+          startAngle: normValue < startNormValue ? angleB : angleA,
+          endAngle: normValue < startNormValue ? angleA : angleB,
+        })(undefined) ?? ''
+      )
+    }
 
     const renderTrack =
       arc({
