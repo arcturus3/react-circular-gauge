@@ -281,6 +281,7 @@ export const Gauge = forwardRef<SVGSVGElement, GaugeProps>(
         <path fill={trackColor} d={renderTrack} />
         <springAnimated.path fill={renderString(arcColor)} d={renderString(renderArc)} />
         <foreignObject x={-contentRadius} y={-contentRadius} width={contentRadius * 2} height={contentRadius * 2}>
+          {/* use `position: fixed` due to https://stackoverflow.com/questions/51313873/svg-foreignobject-not-working-properly-on-safari */}
           <div style={{ width: contentRadius * 2, height: contentRadius * 2, position: 'fixed' }}>
             {renderContent === undefined ? defaultContent : renderNode(renderContent)}
           </div>
